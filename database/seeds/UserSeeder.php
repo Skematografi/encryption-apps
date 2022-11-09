@@ -14,7 +14,10 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-    
+        Role::create(['name' => 'ppic']);
+        Role::create(['name' => 'admin_qc']);
+        Role::create(['name' => 'leader']);
+
         $ppic_user = User::create([
             'username' => 'ppic',
             'name' => 'DEWITA',
