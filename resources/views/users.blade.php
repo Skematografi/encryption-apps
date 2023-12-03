@@ -52,7 +52,7 @@
                                         <a href="javascript:void(0);" onclick="edit(this)" data-id="{{ $item['id'] }}"
                                             class="text-info" title="Klik untuk edit user"><i
                                                 class="fa fa-edit"></i></a><br>
-                                        {{ Form::open(['route' => ['supplier.destroy', $item['id']], 'method' => 'delete']) }}
+                                        {{ Form::open(['route' => ['users.destroy', $item['id']], 'method' => 'delete']) }}
                                         <a href="javascript:void(0);" onclick="$(this).closest('form').submit();"
                                             class="text-danger" title="Klik untuk hapus user"><i
                                                 class="fa fa-trash"></i></a>
@@ -84,7 +84,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('supplier.store') }}" method="POST" autocomplete="off">
+                <form action="{{ route('users.store') }}" method="POST" autocomplete="off">
                     @csrf
                     <div class="modal-body">
                         <div class="form-row">

@@ -17,8 +17,8 @@
 
     <!-- Nav Item - Tables -->
     @hasanyrole('leader|superadmin')
-        <li class="nav-item {{ Request::segment(1) === 'supplier' ? 'active' : null }}">
-            <a class="nav-link" href="/supplier">
+        <li class="nav-item {{ Request::segment(1) === 'home' ? 'active' : null }}">
+            <a class="nav-link" href="/home">
                 <i class="fas fa-fw fa-archive"></i>
                 <span>Master</span></a>
         </li>

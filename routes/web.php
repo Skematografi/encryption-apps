@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,19 +22,5 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::resource('product', 'ProductController');
-Route::resource('supplier', 'SupplierController');
 Route::resource('users', 'UsersController');
-Route::resource('out_standing_po', 'OutStandingPOController');
-Route::resource('return_pmr', 'ReturnPmrController');
-
-Route::post('detail_product/store', 'ProductController@storeDetail');
-Route::get('data/product', 'ProductController@dataProduct');
-Route::post('data/items', 'ProductController@dataItems');
-Route::get('data/supplier', 'SupplierController@dataSupplier');
-Route::get('data/standing', 'OutStandingPOController@dataStanding');
-Route::post('data/po_standing', 'OutStandingPOController@dataPoStanding');
-
-Route::get('/report', 'ReportController@index')->name('report');
-Route::post('/report/print', 'ReportController@printReport')->name('printReport');
 
