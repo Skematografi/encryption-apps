@@ -23,6 +23,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('product', 'ProductController');
 Route::resource('supplier', 'SupplierController');
+Route::resource('users', 'UsersController');
 Route::resource('out_standing_po', 'OutStandingPOController');
 Route::resource('return_pmr', 'ReturnPmrController');
 

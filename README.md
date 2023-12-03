@@ -3,6 +3,7 @@ Specification :
 1. PHP 7.*
 2. Framework Laravel 7
 3. MySQL
+4. Composer 2.*
 
 Required :
 1. MySql
@@ -15,15 +16,15 @@ Installation :
 3. git clone https://github.com/Skematografi/reject-retur-supplier.git
 4. create database, default config :
 ```
-database : invoice
+database : encryption
 username : root
 password : 
 ```
 5. run script on git bash / terminal
 ```
 cp .env.example .env
-php artisan key:generate
 composer update
+php artisan key:generate
 php artisan migrate:fresh --seed
 php artisan optimize:clear
 php artisan config:clear

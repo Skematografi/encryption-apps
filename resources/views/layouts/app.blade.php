@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Aplikasi Reject Retur Supplier</title>
+    <title>Aplikasi Enkripsi & Deskripsi File</title>
 
 
     <!-- Styles -->
@@ -23,11 +23,11 @@
     <link href="{{ asset('template/css/sb-admin-2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('template/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
-    
+
 </head>
 
 <body id="page-top">
-    
+
     <!-- Page Wrapper -->
     <div id="wrapper">
         @include('sweetalert::alert')
@@ -45,7 +45,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Reject Retur Supplier {{ date('Y') }}</span>
+                        <span>Copyright &copy; Encrypt & Decrypt {{ date('Y') }}</span>
                     </div>
                 </div>
             </footer>
@@ -72,7 +72,7 @@
 
     <!-- Page level custom scripts -->
     <script src="{{ asset('template/js/demo/datatables-demo.js') }}"></script>
-        
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
 
     <script>

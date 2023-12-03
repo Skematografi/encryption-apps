@@ -39,13 +39,13 @@
                             <div class="col-md-12">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <img src="{{ asset('/img/logo-mayora.png') }}" width="150px;" alt="">
+                                        <img src="{{ asset('/img/logo.png') }}" width="150px;" alt="">
                                         <h1 class="h4 text-gray-900 mb-4">Selamat Datang</h1>
                                     </div>
                                     <form class="user" method="POST" action="{{ route('login') }}" autocomplete="off">
                                         @csrf
                                         <div class="form-group">
-                                            <input type="username" class="form-control form-control-user @error('username') is-invalid @enderror" placeholder="Masukan Username..." name="username" value="{{ old('username') }}" required autocomplete="username" autofocus>
+                                            <input type="username" class="form-control form-control-user @error('username') is-invalid @enderror" placeholder="Username" name="username" value="{{ old('username') }}" required autocomplete="username" autofocus>
                                             @error('username')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -60,6 +60,12 @@
                                                 </span>
                                             @enderror
                                         </div>
+                                        <div class="form-group">
+                                            <a href="#"  rel="noopener noreferrer">
+                                                {{ __('Lupa Password?') }}
+                                            </a>
+                                        </div>
+
                                         <button type="submit" class="btn btn-primary btn-user btn-block">
                                             {{ __('Login') }}
                                         </button>
@@ -76,7 +82,7 @@
 
     </div>
 
-    
+
      <!-- Bootstrap core JavaScript-->
      <script src="{{ asset('template/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('template/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>

@@ -14,32 +14,15 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        Role::create(['name' => 'ppic']);
-        Role::create(['name' => 'admin_qc']);
-        Role::create(['name' => 'leader']);
+        Role::create(['name' => 'superadmin']);
 
         $ppic_user = User::create([
-            'username' => 'ppic',
-            'name' => 'DEWITA',
+            'username' => 'admin',
+            'name' => 'SUPERADMIN',
             'password' => bcrypt('Asdqwe123'),
-            'email' => 'ppic@mayora.com'
+            'phone' => '08123456789',
+            'email' => 'admin@encrypt.com'
         ]);
-        $ppic_user->assignRole('ppic');
-
-        $admin_qc_user = User::create([
-            'username' => 'admin_qc',
-            'name' => 'LAYLA',
-            'password' => bcrypt('Asdqwe123'),
-            'email' => 'admin_qc@mayora.com'
-        ]);
-        $admin_qc_user->assignRole('admin_qc');
-
-        $leader_user = User::create([
-            'username' => 'leader',
-            'name' => 'JONI',
-            'password' => bcrypt('Asdqwe123'),
-            'email' => 'leader@mayora.com'
-        ]);
-        $leader_user->assignRole('leader');
+        $ppic_user->assignRole('superadmin');
     }
 }
