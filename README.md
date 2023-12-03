@@ -1,4 +1,8 @@
-# Reject Retur Supplier App 
+# Encryption & Decryption App 
+
+Description :
+This is a file encryption application using the Caesar Chiper method plus sha256 encryption
+
 Specification :
 1. PHP 7.*
 2. Framework Laravel 7
@@ -13,7 +17,7 @@ Required :
 Installation :
 1. start mysql on xampp app
 2. open git bash (link download software : https://git-scm.com/download/win) in c:\xampp\htdocs\here 
-3. git clone https://github.com/Skematografi/reject-retur-supplier.git
+3. git clone https://github.com/Skematografi/encryption-apps
 4. create database, default config :
 ```
 database : encryption
