@@ -14,13 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('auth.login');
-});
-
 Auth::routes();
-
+Route::permanentRedirect('/', '/login');
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('users', 'UsersController');
+Route::resource('roles', 'RolesController');
 

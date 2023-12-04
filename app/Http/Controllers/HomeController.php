@@ -2,11 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\ReturnPmr;
-use App\DetailProduct;
-use App\OutStandingPO;
-use App\Supplier;
-
 
 class HomeController extends Controller
 {

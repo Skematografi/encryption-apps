@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Supplier;
+use App\Roles;
 use App\User;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -18,7 +18,9 @@ class UsersController extends Controller
     public function index()
     {
         $data = [
-            'users' => User::get()
+            'users' => User::get(),
+            'roles' => Roles::get(),
+            'access' => auth()->user()->getRoleAndPermission('User')['User']
         ];
 
         return view('users', $data);
@@ -26,81 +28,67 @@ class UsersController extends Controller
 
     public function store(Request $request)
     {
-        $id = $request->supplier_id;
+        $id = $request->user_id;
+        $check_username = User::where([
+                                ['username',  '=', $request->username],
+                                ['id', '<>', $id],
+                            ])->exists();
+        if ($check_username) {
+            Alert::error('Gagal', 'Username sudah terdaftar');
+            return redirect('users');
+        }
 
-        $check_phone = Supplier::where([
-                                    ['phone',  '=', $request->phone],
-                                    ['id', '<>', $id],
-                                ])->exists();
-
-        $check_email = Supplier::where([
-                                    ['email',  '=', $request->email],
-                                    ['id', '<>', $id],
-                                ])->exists();
+        $check_phone = User::where([
+                            ['phone',  '=', $request->phone],
+                            ['id', '<>', $id],
+                        ])->exists();
 
         if($check_phone){
-            Alert::error('Gagal', 'Data supplier gagal disimpan, nomor telepon supplier sudah terdaftar');
-            return redirect('supplier');
+            Alert::error('Gagal', 'Nomor telepon user sudah terdaftar');
+            return redirect('users');
         }
+
+        $check_email = User::where([
+                            ['email',  '=', $request->email],
+                            ['id', '<>', $id],
+                        ])->exists();
 
         if($check_email){
-            Alert::error('Gagal', 'Data supplier gagal disimpan, email supplier sudah terdaftar');
-            return redirect('supplier');
+            Alert::error('Gagal', 'Email user sudah terdaftar');
+            return redirect('users');
         }
 
-        if(is_null($id)){
-
-            $check = Supplier::where('code',  $request->code)->exists();
-
-            if($check){
-                Alert::error('Gagal', 'Data supplier gagal disimpan, kode supplier sudah terdaftar');
-            } else {
-                Supplier::create([
-                    'code' => $request->code,
-                    'name' => $request->name,
-                    'phone' => $request->phone,
-                    'email' => $request->email,
-                    'address' => $request->address
-                ]);
-
-                Alert::success('Berhasil', 'Data supplier berhasil disimpan');
-            }
-
-        } else {
-            Supplier::where('id', $id)
-                    ->update([
-                        'name' => $request->name,
-                        'phone' => $request->phone,
-                        'email' => $request->email,
-                        'address' => $request->address
-                    ]);
-
-            Alert::success('Berhasil', 'Data supplier berhasil diupdate');
-
+        $password = [];
+        if ($request->password) {
+            $password = ['password' => bcrypt($request->password)];
         }
 
-        return redirect('supplier');
+        $data = [
+            'username' => $request->username,
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'role_id' => $request->role_id
+        ];
+        $data = array_merge($data, $password);
+
+        $user = User::updateOrCreate([
+            'id' => $id
+        ], $data);
+
+        if (!$user) {
+            Alert::error('Gagal', 'Data user gagal disimpan');
+            return redirect('users');
+        }
+
+        Alert::success('Berhasil', 'Data user berhasil disimpan');
+        return redirect('users');
     }
 
-    public function destroy(Supplier $supplier)
+    public function destroy(User $user)
     {
-        $supplier->destroy($supplier->id);
-        Alert::success('Berhasil', 'Data supplier berhasil dihapus');
-        return redirect('supplier');
-    }
-
-    public function dataSupplier(){
-        $supplier = Supplier::get();
-        $data = [];
-
-        foreach($supplier as $item){
-            $data[] = [
-                'id' => $item['id'],
-                'code' => $item['code'],
-                'name' => $item['name']
-            ];
-        }
-
-        return response()->json($data);
+        $user->destroy($user->id);
+        Alert::success('Berhasil', 'Data user berhasil dihapus');
+        return redirect('users');
     }
 }

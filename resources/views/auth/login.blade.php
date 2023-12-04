@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Aplikasi Reject Return Supplier</title>
+    <title>Aplikasi Enkripsi & Deskripsi File</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -45,7 +45,7 @@
                                     <form class="user" method="POST" action="{{ route('login') }}" autocomplete="off">
                                         @csrf
                                         <div class="form-group">
-                                            <input type="username" class="form-control form-control-user @error('username') is-invalid @enderror" placeholder="Username" name="username" value="{{ old('username') }}" required autocomplete="username" autofocus>
+                                            <input type="username" style="font-size: 15px" class="form-control form-control-user @error('username') is-invalid @enderror" placeholder="Username" name="username" value="{{ old('username') }}" required autocomplete="username" autofocus>
                                             @error('username')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -53,7 +53,7 @@
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" name="password" class="form-control form-control-user @error('password') is-invalid @enderror" placeholder="Password" required autocomplete="current-password">
+                                            <input type="password" style="font-size: 15px" name="password" class="form-control form-control-user @error('password') is-invalid @enderror" placeholder="Password" required autocomplete="current-password">
                                             @error('password')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -61,13 +61,13 @@
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <a href="#"  rel="noopener noreferrer">
+                                            <a href="javascript:void(0);">
                                                 {{ __('Lupa Password?') }}
                                             </a>
                                         </div>
 
                                         <button type="submit" class="btn btn-primary btn-user btn-block">
-                                            {{ __('Login') }}
+                                            <span style="font-size:18px;">{{ __('Masuk') }}</span>
                                         </button>
                                     </form>
                                 </div>

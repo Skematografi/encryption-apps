@@ -18,13 +18,13 @@
             <div class="card-header py-3">
                 <div class="row">
                     <div class="col-6">
-                        <h6 class="m-0 font-weight-bold text-primary">Master User</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Master Users</h6>
                     </div>
                     <div class="col-6 text-right">
-                        @hasrole('superadmin')
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalSupplier"
+                        @if ($access['is_insert'])
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modelUser"
                                 onclick="add()">Tambah</button>
-                        @endhasrole
+                        @endif
                     </div>
                 </div>
             </div>
@@ -36,8 +36,9 @@
                             <tr>
                                 <th>USERNAME</th>
                                 <th>NAMA LENGKAP</th>
-                                <th>EMAIL</th>
                                 <th>TELEPON</th>
+                                <th>E-MAIL</th>
+                                <th>ROLE</th>
                                 <th>AKSI</th>
                             </tr>
                         </thead>
@@ -48,18 +49,29 @@
                                     <td class="{{ $item['id'] . 'name' }}">{{ $item['name'] }}</td>
                                     <td class="{{ $item['id'] . 'phone' }}">{{ $item['phone'] }}</td>
                                     <td class="{{ $item['id'] . 'email' }}">{{ $item['email'] }}</td>
+                                    <td class="{{ $item['id'] . 'role-name' }}">{{ $item->role->name }}</td>
                                     <td>
-                                        <a href="javascript:void(0);" onclick="edit(this)" data-id="{{ $item['id'] }}"
-                                            class="text-info" title="Klik untuk edit user"><i
-                                                class="fa fa-edit"></i></a><br>
-                                        {{ Form::open(['route' => ['users.destroy', $item['id']], 'method' => 'delete']) }}
-                                        <a href="javascript:void(0);" onclick="$(this).closest('form').submit();"
-                                            class="text-danger" title="Klik untuk hapus user"><i
-                                                class="fa fa-trash"></i></a>
-                                        {{ Form::close() }}
-                                        <a href="javascript:void(0);" onclick="edit(this)" data-id="{{ $item['id'] }}"
-                                            class="text-info" title="Klik untuk reset password user"><i
-                                                class="fa fa-redo"></i></a><br>
+                                        <div class="d-flex justify-content-center">
+                                            <input type="hidden" class="form-control {{ $item['id'] . 'role-id' }}" name="{{ $item['id'] . 'role-id' }}"
+                                                    value="{{ $item->role->id }}">
+                                            @if ($access['is_edit'])
+                                                <a href="javascript:void(0);" onclick="edit(this)" data-id="{{ $item['id'] }}"
+                                                    class="text-primary mr-3" title="Klik untuk edit user"><i
+                                                        class="fa fa-edit"></i></a>
+                                            @endif
+                                            @if ($access['is_delete'] && auth()->user()->id != $item['id'])
+                                                {{ Form::open(['route' => ['users.destroy', $item['id']], 'method' => 'delete']) }}
+                                                <a href="javascript:void(0);" onclick="$(this).closest('form').submit();"
+                                                    class="text-danger mr-3" title="Klik untuk hapus user"><i
+                                                        class="fa fa-trash"></i></a>
+                                                {{ Form::close() }}
+                                            @endif
+                                            @if ($access['is_edit'] && auth()->user()->id != $item['id'])
+                                            <a href="javascript:void(0);" onclick="edit(this)" data-id="{{ $item['id'] }}"
+                                                class="text-success" title="Klik untuk reset password user"><i
+                                                    class="fa fa-redo"></i></a>
+                                            @endif
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
@@ -74,7 +86,7 @@
 
 
     <!-- Modal -->
-    <div class="modal fade" id="modalSupplier" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    <div class="modal fade" id="modelUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -89,31 +101,44 @@
                     <div class="modal-body">
                         <div class="form-row">
                             <div class="col-md-6 mb-3">
-                                <label for="name">Username <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control field-supplier" id="name" name="name"
+                                <label for="username">Username <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control field-user" maxlength="10" id="username" name="username"
                                     required>
+                                <input type="hidden" class="form-control field-user" id="user_id" name="user_id">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="name">Nama Lengkap <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control field-supplier" id="name" name="name"
+                                <input type="text" class="form-control field-user" maxlength="20" id="name" name="name"
                                     required>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="col-md-6 mb-3">
-                                <label for="code">Telepon <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control field-supplier" id="phone" name="phone"
+                                <label for="phone">Telepon <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control field-user" onKeyPress="if(this.value.length==14) return false;" id="phone" name="phone"
                                     required>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="name">Email <span class="text-danger">*</span></label>
-                                <input type="email" class="form-control field-supplier" id="email" name="email"
+                                <input type="email" class="form-control field-user" maxlength="30" id="email" name="email"
                                     required>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="name">Role <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control field-supplier" id="email" name="email" required>
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control field-user" maxlength="10" id="password" name="password"
+                                    required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="role_id">Role <span class="text-danger">*</span></label>
+                                <select name="role_id" class="form-control field-user" id="role_id" required>
+                                    <option value="">- Pilih Role -</option>
+                                    @foreach ($roles as $row)
+                                        <option value="{{ $row['id'] }}">{{ $row['name'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -129,25 +154,30 @@
         <script>
             function add() {
                 $('#modalTitle').html('Tambah User');
-                $('.field-supplier').val('');
-                $('#code').attr('readonly', false);
+                $('#username').attr('readonly', false);
+                $('#password').attr('required', true);
+                $('.field-user').val('');
             }
 
             function edit(ele) {
                 let id = $(ele).attr('data-id');
+                let username = $('.' + id + 'username').html();
                 let name = $('.' + id + 'name').html();
                 let phone = $('.' + id + 'phone').html();
                 let email = $('.' + id + 'email').html();
+                let roleId = $('.' + id + 'role-id').val();
 
                 $('#modalTitle').html('Edit User');
-                $('#code').attr('readonly', true);
 
-                $('#supplier_id').val(id);
+                $('#user_id').val(id);
+                $('#username').val(username).attr('readonly', true);
+                $('#password').removeAttr('required');
                 $('#name').val(name);
                 $('#phone').val(phone);
                 $('#email').val(email);
+                $('#role_id').val(roleId);
 
-                $('#modalSupplier').modal('show');
+                $('#modelUser').modal('show');
 
 
             }

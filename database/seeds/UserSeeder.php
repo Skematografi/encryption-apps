@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use App\User;
 
 
@@ -14,15 +13,13 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        Role::create(['name' => 'superadmin']);
-
-        $ppic_user = User::create([
+        User::create([
             'username' => 'admin',
             'name' => 'SUPERADMIN',
-            'password' => bcrypt('Asdqwe123'),
+            'password' => bcrypt('123'),
             'phone' => '08123456789',
-            'email' => 'admin@encrypt.com'
+            'email' => 'admin@encrypt.com',
+            'role_id' => 1,
         ]);
-        $ppic_user->assignRole('superadmin');
     }
 }

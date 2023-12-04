@@ -16,29 +16,42 @@
     <hr class="sidebar-divider">
 
     <!-- Nav Item - Tables -->
-    @hasanyrole('leader|superadmin')
+    @php
+        $access_controls = auth()->user()->getRoleAndPermission();
+        $storage = isset($access_controls['Storage']) ? ($access_controls['Storage']['is_view'] ? true : false) : false;
+        $users = isset($access_controls['User']) ? ($access_controls['User']['is_view'] ? true : false) : false;
+        $roles = isset($access_controls['Roles']) ? ($access_controls['Roles']['is_view'] ? true : false) : false;
+    @endphp
+
+    @if ($storage)
         <li class="nav-item {{ Request::segment(1) === 'home' ? 'active' : null }}">
             <a class="nav-link" href="/home">
                 <i class="fas fa-fw fa-archive"></i>
-                <span>Master</span></a>
+                <span>Storage</span></a>
         </li>
+    @endif
+    @if ($users || $roles)
         <li class="nav-item {{ in_array(Request::segment(1), ['users', 'roles']) ? 'active' : null }}">
             <a class="nav-link {{ in_array(Request::segment(1), ['users', 'roles']) ? null : 'collapsed' }}" href="#"
                 data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                 <i class="fas fa-fw fa-cog"></i>
-                <span>Pengaturan</span>
+                <span>Master</span>
             </a>
             <div id="collapseTwo" class="collapse {{ in_array(Request::segment(1), ['users', 'roles']) ? 'show' : null }}"
                 aria-labelledby="headingTwo" data-parent="#accordionSidebar" style="">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item {{ Request::segment(1) === 'users' ? 'active' : null }}" href="/users"><i
-                            class="fas fa-fw fa-users"></i> Users</a>
-                    <a class="collapse-item {{ Request::segment(1) === 'roles' ? 'active' : null }}" href="/roles"><i
-                            class="fas fa-fw fa-user-tag"></i> Roles</a>
+                    @if ($users)
+                        <a class="collapse-item {{ Request::segment(1) === 'users' ? 'active' : null }}" href="/users"><i
+                                class="fas fa-fw fa-users"></i> Users</a>
+                    @endif
+                    @if ($roles)
+                        <a class="collapse-item {{ Request::segment(1) === 'roles' ? 'active' : null }}" href="/roles"><i
+                                class="fas fa-fw fa-user-tag"></i> Roles</a>
+                    @endif
                 </div>
             </div>
         </li>
-    @endhasanyrole
+    @endif
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
