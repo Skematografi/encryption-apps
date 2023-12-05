@@ -18,7 +18,7 @@
             <div class="card-header py-3">
                 <div class="row">
                     <div class="col-6">
-                        <h6 class="m-0 font-weight-bold text-primary">Master Users</h6>
+                        <h4 class="m-0 font-weight-bold text-primary">Users</h4>
                     </div>
                     <div class="col-6 text-right">
                         @if ($access['is_insert'])
@@ -34,12 +34,12 @@
                         style="font-size: 15px;">
                         <thead class="thead-dark">
                             <tr>
-                                <th>USERNAME</th>
-                                <th>NAMA LENGKAP</th>
-                                <th>TELEPON</th>
-                                <th>E-MAIL</th>
-                                <th>ROLE</th>
-                                <th>AKSI</th>
+                                <th>Username</th>
+                                <th>Full Name</th>
+                                <th>Telepon</th>
+                                <th>E-mail</th>
+                                <th>Role</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>

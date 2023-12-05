@@ -12,7 +12,7 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        $modules = ['Storage', 'User', 'Roles'];
+        $modules = ['Storages', 'User', 'Roles'];
         foreach ($modules as $module) {
             Permission::create([
                 'model' => $module

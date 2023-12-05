@@ -1,8 +1,8 @@
 <!-- Sidebar -->
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar" style="font-size:15px;">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/home">
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-key"></i>
         </div>
@@ -18,14 +18,14 @@
     <!-- Nav Item - Tables -->
     @php
         $access_controls = auth()->user()->getRoleAndPermission();
-        $storage = isset($access_controls['Storage']) ? ($access_controls['Storage']['is_view'] ? true : false) : false;
+        $storages = isset($access_controls['Storages']) ? ($access_controls['Storages']['is_view'] ? true : false) : false;
         $users = isset($access_controls['User']) ? ($access_controls['User']['is_view'] ? true : false) : false;
         $roles = isset($access_controls['Roles']) ? ($access_controls['Roles']['is_view'] ? true : false) : false;
     @endphp
 
-    @if ($storage)
-        <li class="nav-item {{ Request::segment(1) === 'home' ? 'active' : null }}">
-            <a class="nav-link" href="/home">
+    @if ($storages)
+        <li class="nav-item {{ Request::segment(1) === 'storages' ? 'active' : null }}">
+            <a class="nav-link" href="/storages">
                 <i class="fas fa-fw fa-archive"></i>
                 <span>Storage</span></a>
         </li>

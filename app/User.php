@@ -64,7 +64,7 @@ class User extends Authenticatable
             ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
             ->leftJoin('access_controls', 'roles.id', '=', 'access_controls.role_id')
             ->leftJoin('permissions', 'access_controls.permission_id', '=', 'permissions.id')
-            ->where( $whereModel)
+            ->where($whereModel)
             ->select(
                 'permissions.model',
                 'access_controls.is_view',

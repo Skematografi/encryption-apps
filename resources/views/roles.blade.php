@@ -18,7 +18,7 @@
             <div class="card-header py-3">
                 <div class="row">
                     <div class="col-6">
-                        <h6 class="m-0 font-weight-bold text-primary">Master Roles</h6>
+                        <h4 class="m-0 font-weight-bold text-primary">Roles</h4>
                     </div>
                     <div class="col-6 text-right">
                         @if ($access['is_insert'])
@@ -35,16 +35,14 @@
                         style="font-size: 15px;">
                         <thead class="thead-dark">
                             <tr>
-                                <th width="10%">ID</th>
-                                <th width="45%">ROLE</th>
-                                <th width="25%">MODIFIED</th>
-                                <th width="20%">AKSI</th>
+                                <th width="45%">Role</th>
+                                <th width="25%">Modified</th>
+                                <th width="20%">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($roles as $key => $item)
                                 <tr>
-                                    <td>{{ ($key+1) }}</td>
                                     <td class="{{ $item['id'] . 'name' }}">{{ $item['name'] }}</td>
                                     <td class="{{ $item['id'] . 'updated_at' }}">{{ date('d-m-Y H:i:s', strtotime($item['updated_at'])) }}</td>
                                     <td>
