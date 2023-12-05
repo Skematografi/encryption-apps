@@ -16,6 +16,7 @@
     <link href="{{ asset('template/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('template/css/sb-admin-2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('template/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('dropzone/min/dropzone.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
 
 </head>
@@ -66,6 +67,8 @@
 
     <!-- Page level custom scripts -->
     <script src="{{ asset('template/js/demo/datatables-demo.js') }}"></script>
+
+    <script src="{{ asset('dropzone/min/dropzone.min.js') }}"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
 

@@ -6,6 +6,7 @@ use App\AccessControl;
 use App\Roles;
 use App\Storages;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class StoragesController extends Controller
@@ -50,27 +51,12 @@ class StoragesController extends Controller
 
     public function store(Request $request)
     {
-        $id = $request->role_id;
+        $image = $request->file('file');
 
-        $role = Roles::updateOrCreate([
-            'id' => $id
-        ], ['name' => $request->name]);
+        $imageName = time() . '.' . $image->extension();
+        $image->move('storage', $imageName);
 
-        foreach ($request->modules as $attr) {
-            AccessControl::updateOrCreate([
-                'id' => $attr['access_control_id']
-            ], [
-                'role_id' => $role->id,
-                'permission_id' => $attr['permission_id'],
-                'is_view' => isset($attr['is_view']) ? 1 : 0,
-                'is_insert' => isset($attr['is_insert']) ? 1 : 0,
-                'is_edit' => isset($attr['is_edit']) ? 1 : 0,
-                'is_delete' => isset($attr['is_delete']) ? 1 : 0,
-            ]);
-        }
-
-        Alert::success('Berhasil', 'Data role berhasil disimpan');
-        return redirect('roles');
+        return response()->json(['success' => $imageName]);
     }
 
     public function destroy(Storages $storages)

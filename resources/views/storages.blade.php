@@ -30,8 +30,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover" width="100%" cellspacing="0"
-                        style="font-size: 15px;">
+                    <table class="table table-bordered table-hover" width="100%" cellspacing="0" style="font-size: 15px;">
                         <thead class="thead-dark">
                             <tr>
                                 <th>Name</th>
@@ -47,35 +46,39 @@
                                 <tr>
                                     <td class="{{ $item['id'] . 'name' }} text-left">{{ $item['name'] }}</td>
                                     <td class="{{ $item['id'] . 'size' }} text-left">{{ $item['size'] }}</td>
-                                    <td class="{{ $item['id'] . 'updated_at' }}">{{ date('d-m-Y H:i:s', strtotime($item['updated_at'])) }}</td>
+                                    <td class="{{ $item['id'] . 'updated_at' }}">
+                                        {{ date('d-m-Y H:i:s', strtotime($item['updated_at'])) }}</td>
                                     <td class="{{ $item['id'] . 'owner' }}">{{ $item['owner'] }}</td>
                                     <td class="{{ $item['id'] . 'status' }}">{{ $item['status'] }}</td>
                                     <td>
                                         <div class="d-flex justify-content-center">
                                             @if ($access['is_edit'])
-                                                <a href="/storages/{{ $item['id'] }}/edit" class="text-primary mr-3" title="Edit">
+                                                <a href="/storages/{{ $item['id'] }}/edit" class="text-primary mr-3"
+                                                    title="Edit">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
                                             @endif
                                             @if ($access['is_delete'])
                                                 {{ Form::open(['route' => ['storages.destroy', $item['id']], 'method' => 'delete']) }}
                                                 <a href="javascript:void(0);" onclick="$(this).closest('form').submit();"
-                                                    class="text-danger mr-3" title="Delete"><i
-                                                        class="fa fa-trash"></i></a>
+                                                    class="text-danger mr-3" title="Delete"><i class="fa fa-trash"></i></a>
                                                 {{ Form::close() }}
                                             @endif
                                             @if ($access['is_edit'])
-                                                <a href="/storages/{{ $item['id'] }}/edit" class="text-success mr-3" title="Download">
+                                                <a href="/storages/{{ $item['id'] }}/edit" class="text-success mr-3"
+                                                    title="Download">
                                                     <i class="fa fa-download"></i>
                                                 </a>
                                             @endif
 
                                             @if ($item['status'] == 'Encrypted')
-                                                <a href="/storages/{{ $item['id'] }}/edit" class="text-secondary mr-3" title="Decryption">
+                                                <a href="/storages/{{ $item['id'] }}/edit" class="text-secondary mr-3"
+                                                    title="Decryption">
                                                     <i class="fa fa-unlock-alt"></i>
                                                 </a>
                                             @else
-                                                <a href="/storages/{{ $item['id'] }}/edit" class="text-secondary mr-3" title="Encryption">
+                                                <a href="/storages/{{ $item['id'] }}/edit" class="text-secondary mr-3"
+                                                    title="Encryption">
                                                     <i class="fa fa-key"></i>
                                                 </a>
                                             @endif
@@ -93,7 +96,7 @@
 
     <div class="modal fade" id="modelUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalTitle"></h5>
@@ -101,27 +104,15 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('users.store') }}" method="POST" autocomplete="off">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="form-row">
-                            <div class="col-md-12 mb-3">
-                                <label for="fileName">File Name</label>
-                                <input type="text" class="form-control" maxlength="50" id="fileName" name="fileName">
-                                <input type="hidden" class="form-control" id="file_id" name="file_id">
-                            </div>
-                            <div class="col-md-12">
-                                <label for="name">Nama Lengkap <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control field-user" maxlength="20" id="name" name="name"
-                                    required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                    </div>
-                </form>
+                <div class="modal-body">
+                    <form action="{{ route('storages.store') }}" method="POST" id="formUpload" class="dropzone">
+                        @csrf
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" id="btnUpload" class="btn btn-primary">Simpan</button>
+                </div>
             </div>
         </div>
     </div>
@@ -129,6 +120,7 @@
 
     @push('script')
         <script>
+
             function add() {
                 $('#modalTitle').html('Upload File');
                 $('#fileName').val('');
