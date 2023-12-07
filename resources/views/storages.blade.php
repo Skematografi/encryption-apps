@@ -22,7 +22,7 @@
                     </div>
                     <div class="col-6 text-right">
                         @if ($access['is_insert'])
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modelUser"
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalUpload"
                                 onclick="add()">Upload</button>
                         @endif
                     </div>
@@ -33,7 +33,7 @@
                     <table class="table table-bordered table-hover" width="100%" cellspacing="0" style="font-size: 15px;">
                         <thead class="thead-dark">
                             <tr>
-                                <th>Name</th>
+                                <th>File Name</th>
                                 <th>Size</th>
                                 <th>Modified</th>
                                 <th>Owner</th>
@@ -44,43 +44,60 @@
                         <tbody>
                             @foreach ($storages as $item)
                                 <tr>
-                                    <td class="{{ $item['id'] . 'name' }} text-left">{{ $item['name'] }}</td>
+                                    <td class="{{ $item['id'] . 'filename' }} text-left" data-filename="{{ $item['filename'] }}">
+                                        @if (in_array(strtoupper($item['extension']), ['PDF', 'JPG', 'JPEG', 'PNG', 'GIF']) && $item['status'] != 'Encrypted')
+                                            <a href="{{ $item['path'] }}" class="text-primary mr-3" target="_blank" title="Preview">
+                                                {{ $item['filename'] }}
+                                            </a>
+                                        @else
+                                            {{ $item['filename'] }}
+                                        @endif
+                                    </td>
                                     <td class="{{ $item['id'] . 'size' }} text-left">{{ $item['size'] }}</td>
                                     <td class="{{ $item['id'] . 'updated_at' }}">
                                         {{ date('d-m-Y H:i:s', strtotime($item['updated_at'])) }}</td>
                                     <td class="{{ $item['id'] . 'owner' }}">{{ $item['owner'] }}</td>
-                                    <td class="{{ $item['id'] . 'status' }}">{{ $item['status'] }}</td>
+                                    <td class="{{ $item['id'] . 'status' }}">
+                                        @if ($item['status'] == 'Encrypted')
+                                            <span class="badge badge-success">{{ $item['status'] }}</span>
+                                        @else
+                                            <span class="badge badge-secondary">{{ $item['status'] }}</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            @if ($access['is_edit'])
-                                                <a href="/storages/{{ $item['id'] }}/edit" class="text-primary mr-3"
-                                                    title="Edit">
+                                            @if ($access['is_edit'] && $item['status'] != 'Encrypted')
+                                                <a href="javascript:void(0);" data-id="{{ $item['id'] }}" class="text-primary mr-3 btnEdit"
+                                                    data-toggle="modal" data-target="#modalRename" title="Edit">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
                                             @endif
-                                            @if ($access['is_delete'])
+
+                                            @if ($access['is_delete'] && $item['status'] != 'Encrypted')
                                                 {{ Form::open(['route' => ['storages.destroy', $item['id']], 'method' => 'delete']) }}
                                                 <a href="javascript:void(0);" onclick="$(this).closest('form').submit();"
-                                                    class="text-danger mr-3" title="Delete"><i class="fa fa-trash"></i></a>
+                                                    class="text-danger mr-3" title="Delete"><i
+                                                        class="fa fa-trash"></i></a>
                                                 {{ Form::close() }}
                                             @endif
-                                            @if ($access['is_edit'])
-                                                <a href="/storages/{{ $item['id'] }}/edit" class="text-success mr-3"
-                                                    title="Download">
-                                                    <i class="fa fa-download"></i>
-                                                </a>
-                                            @endif
 
-                                            @if ($item['status'] == 'Encrypted')
-                                                <a href="/storages/{{ $item['id'] }}/edit" class="text-secondary mr-3"
-                                                    title="Decryption">
-                                                    <i class="fa fa-unlock-alt"></i>
-                                                </a>
-                                            @else
-                                                <a href="/storages/{{ $item['id'] }}/edit" class="text-secondary mr-3"
-                                                    title="Encryption">
-                                                    <i class="fa fa-key"></i>
-                                                </a>
+                                            <a href="/download/{{ $item['id'] }}" class="text-success mr-3"
+                                                title="Download">
+                                                <i class="fa fa-download"></i>
+                                            </a>
+
+                                            @if (auth()->user()->id == $item['user_id'])
+                                                @if ($item['status'] == 'Encrypted')
+                                                    <a href="/decryption/{{ $item['id'] }}" class="text-secondary mr-3"
+                                                        title="Decryption">
+                                                        <i class="fa fa-unlock-alt"></i>
+                                                    </a>
+                                                @else
+                                                    <a href="javascript:void(0);" data-id="{{ $item['id'] }}" class="text-secondary mr-3 btnEncryption"
+                                                        data-toggle="modal" data-target="#modalEncryption" title="Encryption">
+                                                        <i class="fa fa-key"></i>
+                                                    </a>
+                                                @endif
                                             @endif
                                         </div>
                                     </td>
@@ -94,12 +111,13 @@
 
     </div>
 
-    <div class="modal fade" id="modelUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true">
+    {{-- Modal for upload file --}}
+    <div class="modal fade" id="modalUpload" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitle"></h5>
+                    <h5 class="modal-title" id="modalTitle">Upload File</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -116,37 +134,95 @@
             </div>
         </div>
     </div>
+
+    {{-- Modal for rename file --}}
+    <div class="modal fade" id="modalRename" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Rename File Name</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ route('rename') }}" id="formRename" method="POST" autocomplete="off">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="col-md-12 mb-3">
+                                <label for="rename">New File Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" maxlength="50" id="rename" name="rename"
+                                    required>
+                                <input type="hidden" class="form-control file_id" name="file_id">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal for encryption file --}}
+    <div class="modal fade" id="modalEncryption" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Encryption File</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ route('encryption') }}" method="POST" autocomplete="off">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="col-md-12 mb-3">
+                                <label for="secret_key">Secret Key <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" maxlength="50" id="secret_key" name="secret_key"
+                                    required>
+                                <input type="hidden" class="form-control file_id" name="file_id">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <!-- /.container-fluid -->
 
     @push('script')
         <script>
 
+            $("#btnUpload").click(function() {
+                location.reload();
+            });
+
+            $('.btnEdit').click(function() {
+                let id = $(this).attr('data-id');
+                let filename = $('.' + id + 'filename').attr('data-filename');
+                let arrFilename = filename.split('.');
+                $('#rename').val(arrFilename[0]);
+                $('.file_id').val(id);
+            });
+
+            $('.btnEncryption').click(function() {
+                let id = $(this).attr('data-id');
+                $('#secret_key').val('');
+                $('.file_id').val(id);
+            });
+
             function add() {
-                $('#modalTitle').html('Upload File');
                 $('#fileName').val('');
-            }
-
-            function edit(ele) {
-                let id = $(ele).attr('data-id');
-                let username = $('.' + id + 'username').html();
-                let name = $('.' + id + 'name').html();
-                let phone = $('.' + id + 'phone').html();
-                let email = $('.' + id + 'email').html();
-                let roleId = $('.' + id + 'role-id').val();
-
-                $('#modalTitle').html('Edit User');
-
-                $('#user_id').val(id);
-                $('#username').val(username).attr('readonly', true);
-                $('#password').removeAttr('required');
-                $('#name').val(name);
-                $('#phone').val(phone);
-                $('#email').val(email);
-                $('#role_id').val(roleId);
-
-                $('#modelUser').modal('show');
-
-
             }
         </script>
     @endpush

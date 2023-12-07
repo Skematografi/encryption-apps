@@ -13,7 +13,7 @@ class Storages extends Model
     protected $table = 'storages';
 
     protected $fillable = [
-        'name', 'size', 'user_id', 'path', 'status'
+        'filename', 'unique_filename', 'extension', 'size', 'user_id', 'path', 'status', 'key', 'init_vector'
     ];
 
     public static function fetchData()
@@ -22,8 +22,11 @@ class Storages extends Model
             ->select(
                 "users.name as owner",
                 "storages.id",
-                "storages.name",
+                "storages.user_id",
+                "storages.path",
+                "storages.extension",
                 "storages.updated_at",
+                DB::raw("(CONCAT(storages.filename, '.', storages.extension)) as filename"),
                 DB::raw("(CASE WHEN storages.status = 1 THEN 'Encrypted' ELSE 'Not Encrypted' END) as status"),
                 DB::raw("(
                     CASE WHEN storages.size < 1025 THEN
@@ -39,7 +42,7 @@ class Storages extends Model
         }
 
         $model = $model->orderBy('storages.updated_at', 'DESC')
-            ->orderBy('storages.name', 'ASC')
+            ->orderBy('storages.filename', 'ASC')
             ->get();
 
         return $model;

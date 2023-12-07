@@ -21,4 +21,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('users', 'UsersController');
 Route::resource('roles', 'RolesController');
 Route::resource('storages', 'StoragesController');
+Route::post('/rename', 'StoragesController@rename')->name('rename');
+Route::get('/download/{id}', 'StoragesController@download')->name('download');
+Route::post('/encryption', 'StoragesController@encryption')->name('encryption');
+Route::get('/decryption/{id}', 'StoragesController@decryption')->name('decryption');
 

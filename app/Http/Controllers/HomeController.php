@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Storages;
+use App\User;
 
 class HomeController extends Controller
 {
@@ -13,16 +15,34 @@ class HomeController extends Controller
 
     public function index()
     {
-        $suppliers = 0;
-        $products = 0;
-        $standing = 0;
-        $return = 0;
+        $total_encrypted = Storages::where('status', '=', 1)->count();
+        $total_not_encrypted = Storages::where('status', '=', 0)->count();
+        $total_file =  $total_encrypted +  $total_not_encrypted;
+        $total_user = User::count();
 
         $data = [
-            'suppliers' => $suppliers,
-            'products' => $products,
-            'standing' => $standing,
-            'return' => $return
+            'data' => [
+                'files' => [
+                    'total' => $total_file,
+                    'label' => 'Files',
+                    'icon' => 'fas fa-archive'
+                ],
+                'encrypted' => [
+                    'total' => $total_encrypted,
+                    'label' => 'File Encryption',
+                    'icon' => 'fas fa-file-code'
+                ],
+                'not_encrypted' => [
+                    'total' => $total_not_encrypted,
+                    'label' => 'File Not Encryption',
+                    'icon' => 'fas fa-file'
+                ],
+                'users' => [
+                    'total' => $total_user,
+                    'label' => 'Users',
+                    'icon' => 'fas fa-users'
+                ]
+            ]
         ];
 
         return view('home', $data);
