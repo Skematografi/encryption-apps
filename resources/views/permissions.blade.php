@@ -60,7 +60,7 @@
                                                 value="{{ $item['access_control_id'] }}">
                                             <input type="hidden" class="form-control" name="modules[{{ $item['permission_id'] }}][permission_id]"
                                                 value="{{ $item['permission_id'] }}">
-                                            <input class="form-check-input" type="checkbox"
+                                            <input class="form-check-input checkbox-view checkbox-view{{ $item['permission_id'] }}" data-id="{{ $item['permission_id'] }}" type="checkbox"
                                                 name="modules[{{ $item['permission_id'] }}][is_view]"
                                                 value="{{ $item['is_view'] }}"
                                                 {{ $item['is_view'] ? 'checked' : '' }}>
@@ -68,7 +68,7 @@
                                     </td>
                                     <td>
                                         <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox"
+                                            <input class="form-check-input checkbox-other checkbox-other{{ $item['permission_id'] }}" data-id="{{ $item['permission_id'] }}" type="checkbox"
                                                 name="modules[{{ $item['permission_id'] }}][is_insert]"
                                                 value="{{ $item['is_insert'] }}"
                                                 {{ $item['is_insert'] ? 'checked' : '' }}>
@@ -76,7 +76,7 @@
                                     </td>
                                     <td>
                                         <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox"
+                                            <input class="form-check-input checkbox-other checkbox-other{{ $item['permission_id'] }}" data-id="{{ $item['permission_id'] }}" type="checkbox"
                                                 name="modules[{{ $item['permission_id'] }}][is_edit]"
                                                 value="{{ $item['is_edit'] }}"
                                                 {{ $item['is_edit'] ? 'checked' : '' }}>
@@ -84,7 +84,7 @@
                                     </td>
                                     <td>
                                         <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox"
+                                            <input class="form-check-input checkbox-other checkbox-other{{ $item['permission_id'] }}" data-id="{{ $item['permission_id'] }}" type="checkbox"
                                                 name="modules[{{ $item['permission_id'] }}][is_delete]"
                                                 value="{{ $item['is_delete'] }}"
                                                 {{ $item['is_delete'] ? 'checked' : '' }}>
@@ -105,4 +105,22 @@
 
     </div>
     <!-- /.container-fluid -->
+
+    @push('script')
+        <script>
+            $('.checkbox-view').change(function() {
+                let id = $(this).attr('data-id');
+                if (!this.checked) {
+                    $('.checkbox-other' + id).prop('checked', false);
+                }
+            });
+
+            $('.checkbox-other').change(function() {
+                let id = $(this).attr('data-id');
+                if (this.checked) {
+                    $('.checkbox-view' + id).prop('checked', true);
+                }
+            });
+        </script>
+    @endpush
 @endsection

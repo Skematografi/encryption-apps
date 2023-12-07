@@ -51,9 +51,15 @@ class RolesController extends Controller
     {
         $id = $request->role_id;
 
+        $roleExists = Roles::where('id', '<>', $id)->where('name', trim($request->name))->first();
+        if ($roleExists) {
+            Alert::error('Gagal', 'Nama role sudah terdaftar');
+            return redirect('roles');
+        }
+
         $role = Roles::updateOrCreate([
             'id' => $id
-        ], ['name' => $request->name]);
+        ], ['name' => trim($request->name)]);
 
         foreach ($request->modules as $attr) {
             AccessControl::updateOrCreate([
