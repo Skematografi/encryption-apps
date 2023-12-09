@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CaesarChiper;
+use App\AppHelper;
 use App\Storages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
@@ -14,6 +15,7 @@ class StoragesController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        AppHelper::deleteDir(public_path("storage/uploads/tmp"));
     }
 
     public function index()
@@ -93,7 +95,25 @@ class StoragesController extends Controller
     {
         $storages = Storages::firstWhere('id', $id);
         $filename = $storages->filename . '.' . $storages->extension;
-        return Response::download(public_path($storages->path), $filename);
+        $source = public_path($storages->path);
+        $dirPath = public_path("/storage/uploads/tmp");
+        if (!is_dir($dirPath)) {
+            mkdir($dirPath);
+        }
+
+        $newFile = $dirPath . "/copy_" . $storages->unique_filename;
+        copy($source, $newFile);
+
+        $decrypted = function ($file, $key, $iv) {
+            $cipher = 'aes-256-cbc-hmac-sha256';
+            return openssl_decrypt($file, $cipher, $key, OPENSSL_RAW_DATA, $iv);
+        };
+
+        $content = file_get_contents($newFile);
+        $decrypted = $decrypted($content, $storages->key, $storages->init_vector);
+        file_put_contents($newFile, $decrypted);
+
+        return Response::download($newFile, $filename);
     }
 
     public function encryption(Request $request)
