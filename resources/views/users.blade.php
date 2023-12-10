@@ -108,7 +108,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="name">Nama Lengkap <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control field-user" maxlength="20" id="name" name="name"
+                                <input type="text" class="form-control field-user" maxlength="50" id="name" name="name"
                                     required>
                             </div>
                         </div>
@@ -120,14 +120,14 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="name">Email <span class="text-danger">*</span></label>
-                                <input type="email" class="form-control field-user" maxlength="30" id="email" name="email"
+                                <input type="email" class="form-control field-user" maxlength="50" id="email" name="email"
                                     required>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="col-md-6 mb-3">
                                 <label for="password">Password</label>
-                                <input type="password" class="form-control field-user" maxlength="10" id="password" name="password"
+                                <input type="password" class="form-control field-user" minlength="8" maxlength="20" id="password" name="password"
                                     required>
                             </div>
                             <div class="col-md-6 mb-3">

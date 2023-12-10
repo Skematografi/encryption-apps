@@ -45,7 +45,7 @@
                                     @if ($message)
                                         <p>{{ $message }}</p>
                                         <div class="form-group">
-                                            <a href="/forgot-password/request-reset" class="text-primary">
+                                            <a href="/login" class="text-primary">
                                                 {{ __('Login') }}
                                             </a>
                                         </div>

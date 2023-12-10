@@ -37,6 +37,7 @@ class UsersController extends Controller
                                 ['username',  '=', $request->username],
                                 ['id', '<>', $id],
                             ])->exists();
+
         if ($check_username) {
             Alert::error('Gagal', 'Username sudah terdaftar');
             return redirect('users');
@@ -125,5 +126,64 @@ class UsersController extends Controller
 
         Alert::success('Berhasil', 'Password user berhasil direset');
         return redirect('users');
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $id = $request->user_id;
+        $check_phone = User::where([
+                            ['phone',  '=', $request->phone],
+                            ['id', '<>', $id],
+                        ])->exists();
+
+        if ($check_phone){
+            Alert::error('Gagal', 'Nomor telepon sudah terdaftar');
+            return redirect('users');
+        }
+
+        $check_email = User::where([
+                            ['email',  '=', $request->email],
+                            ['id', '<>', $id],
+                        ])->exists();
+
+        if ($check_email){
+            Alert::error('Gagal', 'Email sudah terdaftar');
+            return redirect('users');
+        }
+
+        $password = [];
+        if ($request->password) {
+            $password = ['password' => bcrypt($request->password)];
+        }
+
+        $data = [
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'role_id' => $request->role_id
+        ];
+        $data = array_merge($data, $password);
+
+        $user = User::updateOrCreate([
+            'id' => $id
+        ], $data);
+
+        if (!$user) {
+            Alert::error('Gagal', 'Profile gagal disimpan');
+            return redirect('home');
+        }
+
+        Alert::success('Berhasil', 'Profile berhasil disimpan');
+        return redirect('home');
+    }
+
+    public function show()
+    {
+        $data = [
+            'roles' => Roles::get(),
+            'users' => auth()->user(),
+        ];
+
+        return view('profile', $data);
     }
 }

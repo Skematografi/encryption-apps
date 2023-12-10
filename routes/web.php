@@ -20,6 +20,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('users', 'UsersController');
 Route::get('/users/{id}/reset', 'UsersController@reset');
+Route::get('/users/profile', 'UsersController@profile')->name('profile');
+Route::post('/users/profile', 'UsersController@updateProfile')->name('users.update-profile');
 Route::get('/forgot-password/request-reset', 'RequestResetController@request');
 Route::post('/forgot-password/request-reset', 'RequestResetController@requestReset')->name('request.reset');
 Route::resource('roles', 'RolesController');

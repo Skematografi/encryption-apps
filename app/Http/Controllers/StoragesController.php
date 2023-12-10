@@ -128,23 +128,13 @@ class StoragesController extends Controller
         $storages->key = $this->caesarChiper($request->secret_key);
         $source = public_path($storages->path);
 
-        $generateRandomString = function() {
-            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            $charactersLength = strlen($characters);
-            $randomString = '';
-            for ($i = 0; $i < 16; $i++) {
-                $randomString .= $characters[rand(0, $charactersLength - 1)];
-            }
-            return $randomString;
-        };
-
         $encrypted = function ($file, $key, $iv) {
             $cipher = 'aes-256-cbc-hmac-sha256';
             return openssl_encrypt($file, $cipher, $key, OPENSSL_RAW_DATA, $iv);
         };
 
         $content = file_get_contents($source);
-        $random = $generateRandomString();
+        $random = AppHelper::generateRandomString(16);
         $encrypted = $encrypted($content, $storages->key, $random);
         file_put_contents($source, $encrypted);
 
