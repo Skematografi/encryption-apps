@@ -40,36 +40,26 @@
                                 <div class="p-5">
                                     <div class="text-center">
                                         <img src="{{ asset('/img/logo.png') }}" width="150px;" alt="">
-                                        <h1 class="h4 text-gray-900 mb-4">Selamat Datang</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Lupa Password?</h1>
                                     </div>
-                                    <form class="user" method="POST" action="{{ route('login') }}" autocomplete="off">
-                                        @csrf
+                                    @if ($message)
+                                        <p>{{ $message }}</p>
                                         <div class="form-group">
-                                            <input type="username" style="font-size: 15px" class="form-control form-control-user @error('username') is-invalid @enderror" placeholder="Username" name="username" value="{{ old('username') }}" required autocomplete="username" autofocus>
-                                            @error('username')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="password" style="font-size: 15px" name="password" class="form-control form-control-user @error('password') is-invalid @enderror" placeholder="Password" required autocomplete="current-password">
-                                            @error('password')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group">
-                                            <a href="/forgot-password/request-reset" class="text-primary" title="Klik untuk reset password user">
-                                                {{ __('Lupa Password?') }}
+                                            <a href="/forgot-password/request-reset" class="text-primary">
+                                                {{ __('Login') }}
                                             </a>
                                         </div>
-
-                                        <button type="submit" class="btn btn-primary btn-user btn-block">
-                                            <span style="font-size:18px;">{{ __('Masuk') }}</span>
-                                        </button>
-                                    </form>
+                                    @else
+                                        <form class="user" method="POST" action="{{ route('request.reset') }}" autocomplete="off">
+                                            @csrf
+                                            <div class="form-group">
+                                                <input type="text" style="font-size: 15px" class="form-control" placeholder="Username or Email" name="email_or_username" maxlength="100" required autofocus>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary btn-user btn-block">
+                                                <span style="font-size:18px;">{{ __('Submit') }}</span>
+                                            </button>
+                                        </form>
+                                    @endif
                                 </div>
                             </div>
                         </div>

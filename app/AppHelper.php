@@ -4,7 +4,8 @@ namespace App;
 
 class AppHelper
 {
-    public static function deleteDir($dirPath) {
+    public static function deleteDir($dirPath)
+    {
         if (!is_dir($dirPath)) {
             return true;
         }
@@ -25,5 +26,18 @@ class AppHelper
         rmdir($dirPath);
 
         return true;
+    }
+
+    public static function generateRandomString($length = 10)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+
+        return $randomString;
     }
 }

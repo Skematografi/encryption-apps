@@ -67,9 +67,9 @@
                                                 {{ Form::close() }}
                                             @endif
                                             @if ($access['is_edit'] && auth()->user()->id != $item['id'])
-                                            <a href="javascript:void(0);" onclick="edit(this)" data-id="{{ $item['id'] }}"
-                                                class="text-success" title="Klik untuk reset password user"><i
-                                                    class="fa fa-redo"></i></a>
+                                                <a href="/users/{{ $item['id'] }}/reset" class="text-success" title="Klik untuk reset password user">
+                                                    <i class="fa fa-redo"></i>
+                                                </a>
                                             @endif
                                         </div>
                                     </td>
