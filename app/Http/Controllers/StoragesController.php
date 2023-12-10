@@ -45,31 +45,36 @@ class StoragesController extends Controller
 
     public function store(Request $request)
     {
-        $image = $request->file('file');
-        $extension = $image->extension();
-        $size = $image->getSize();
-        $originalName = $image->getClientOriginalName();
-        $imageName = str_replace('.' . $extension, '', $originalName);
-        $unique_filename = time() . '.' . $extension;
+        if (isset($_FILES['file']['tmp_name'])) {
+            for ($i = 0; $i < sizeof($_FILES['file']['tmp_name']); $i++) {
+                $getProperti = explode('.', $_FILES['file']['name'][$i]);
+                $extension = end($getProperti);
+                $size = $_FILES['file']['size'][$i];
+                $originalName = $_FILES['file']['name'][$i];
+                $imageName = str_replace('.' . $extension, '', $originalName);
+                $unique_filename = $imageName . '_' . time() . '.' . $extension;
+                $path = "storage/uploads/";
+                move_uploaded_file($_FILES['file']['tmp_name'][$i], public_path($path . $unique_filename));
 
-        $path = "storage/uploads/";
-        $image->move($path, $unique_filename);
+                if (Storages::firstWhere('filename', $imageName)) {
+                    $imageName = $imageName . '_' . time();
+                }
 
-        if (Storages::firstWhere('filename', $imageName)) {
-            $imageName = $imageName . '_' . time();
+                Storages::create([
+                    'user_id' => auth()->user()->id,
+                    'filename' => $imageName,
+                    'extension' => $extension,
+                    'unique_filename' => $unique_filename,
+                    'size' => ($size / 1024),
+                    'status' => false,
+                    'path' => $path . $unique_filename
+                ]);
+            }
+
+            return response()->json(['success' => $imageName]);
         }
 
-        Storages::create([
-            'user_id' => auth()->user()->id,
-            'filename' => $imageName,
-            'extension' => $extension,
-            'unique_filename' => $unique_filename,
-            'size' => ($size / 1024),
-            'status' => false,
-            'path' => $path . $unique_filename
-        ]);
-
-        return response()->json(['success' => $imageName]);
+        return response()->json(['error' => "Failed upload file"]);
     }
 
     public function destroy($id)

@@ -23,7 +23,7 @@
                     <div class="col-6 text-right">
                         @if ($access['is_insert'])
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalUpload"
-                                onclick="add()">Upload</button>
+                                id="triggerUpload">Upload</button>
                         @endif
                     </div>
                 </div>
@@ -123,13 +123,17 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('storages.store') }}" method="POST" id="formUpload" class="dropzone">
+                    <form action="{{ route('storages.store') }}" method="POST" id="upload-form" class="dropzone" enctype="multipart/form-data">
                         @csrf
+                        <div class="previews"></div>
+                        <div class="dz-message" data-dz-message>
+                            <span>Drag and drop files here or click to upload.</span>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                    <button type="submit" id="btnUpload" class="btn btn-primary">Simpan</button>
+                    <button type="button" id="btnUpload" class="btn btn-primary">Selesai</button>
                 </div>
             </div>
         </div>
@@ -202,28 +206,42 @@
 
     @push('script')
         <script>
+            Dropzone.options.uploadForm = { // camelized version of the `id`
+                paramName: "file", // The name that will be used to transfer the file
+                maxFilesize: 50, // MB
+                addRemoveLinks: true,
+                uploadMultiple: true,
+                parallelUploads: 5,
+                acceptedFiles: ".doc, .docx, .xlsx, .xls, .ppt, .pptx, .pdf, .jpg, .jpeg, .png, .gif, .dxf, .dwg, .ai, .psd, .cdm, .zip, .rar",
+                accept: function(file, done) {
+                    done();
+                }
+            };
 
-            $("#btnUpload").click(function() {
-                location.reload();
+            $(document).ready(function(){
+
+                $("#btnUpload").click(function() {
+                    location.reload();
+                });
+
+                $('.btnEdit').click(function() {
+                    let id = $(this).attr('data-id');
+                    let filename = $('.' + id + 'filename').attr('data-filename');
+                    let arrFilename = filename.split('.');
+                    $('#rename').val(arrFilename[0]);
+                    $('.file_id').val(id);
+                });
+
+                $('.btnEncryption').click(function() {
+                    let id = $(this).attr('data-id');
+                    $('#secret_key').val('');
+                    $('.file_id').val(id);
+                });
+
+                $("#triggerUpload").click(function() {
+                    $('#fileName').val('');
+                });
             });
-
-            $('.btnEdit').click(function() {
-                let id = $(this).attr('data-id');
-                let filename = $('.' + id + 'filename').attr('data-filename');
-                let arrFilename = filename.split('.');
-                $('#rename').val(arrFilename[0]);
-                $('.file_id').val(id);
-            });
-
-            $('.btnEncryption').click(function() {
-                let id = $(this).attr('data-id');
-                $('#secret_key').val('');
-                $('.file_id').val(id);
-            });
-
-            function add() {
-                $('#fileName').val('');
-            }
         </script>
     @endpush
 @endsection
