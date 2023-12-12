@@ -68,7 +68,7 @@
 
                     <br>
                     <div class="text-right">
-                        <a href="/home" class="btn btn-secondary mr-3">Kembali</a>
+                        <a href="/dashboard" class="btn btn-secondary mr-3">Kembali</a>
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>
                 </form>
