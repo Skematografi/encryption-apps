@@ -24,22 +24,22 @@ class HomeController extends Controller
             'data' => [
                 'files' => [
                     'total' => $total_file,
-                    'label' => 'Files',
+                    'label' => 'Total Files',
                     'icon' => 'fas fa-archive'
                 ],
                 'encrypted' => [
                     'total' => $total_encrypted,
-                    'label' => 'File Encryption',
+                    'label' => 'Total File Encryption',
                     'icon' => 'fas fa-file-code'
                 ],
                 'not_encrypted' => [
                     'total' => $total_not_encrypted,
-                    'label' => 'File Not Encryption',
+                    'label' => 'Total File Not Encryption',
                     'icon' => 'fas fa-file'
                 ],
                 'users' => [
                     'total' => $total_user,
-                    'label' => 'Users',
+                    'label' => 'Total Users',
                     'icon' => 'fas fa-users'
                 ]
             ]

@@ -12,8 +12,18 @@
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
 
+    <li class="nav-item {{ Request::segment(1) === 'home' ? 'active' : null }}">
+        <a class="nav-link" href="/home">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Dashboard</span></a>
+    </li>
+
     <!-- Divider -->
     <hr class="sidebar-divider">
+
+    <div class="sidebar-heading">
+        Menu
+    </div>
 
     <!-- Nav Item - Tables -->
     @php
