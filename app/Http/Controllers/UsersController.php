@@ -6,7 +6,9 @@ use App\AppHelper;
 use App\Mail\ResetPasswordEmail;
 use App\Roles;
 use App\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\URL;
@@ -17,6 +19,14 @@ class UsersController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware(function ($request, $next) {
+            $hasAccess = AppHelper::checkAuthorization(Auth::user()->role_id, 'User');
+            if (!$hasAccess) {
+                throw new AuthorizationException('Access Denied You don’t have permission to access');
+            }
+
+            return $next($request);
+        });
     }
 
     public function index()
@@ -24,7 +34,8 @@ class UsersController extends Controller
         $data = [
             'users' => User::get(),
             'roles' => Roles::get(),
-            'access' => auth()->user()->getRoleAndPermission('User')['User']
+            'access_controls' => AppHelper::getRoleAndPermission(),
+            'access' => AppHelper::getRoleAndPermission('User', true)
         ];
 
         return view('users', $data);
@@ -128,62 +139,8 @@ class UsersController extends Controller
         return redirect('users');
     }
 
-    public function updateProfile(Request $request)
-    {
-        $id = $request->user_id;
-        $check_phone = User::where([
-                            ['phone',  '=', $request->phone],
-                            ['id', '<>', $id],
-                        ])->exists();
-
-        if ($check_phone){
-            Alert::error('Gagal', 'Nomor telepon sudah terdaftar');
-            return redirect('users');
-        }
-
-        $check_email = User::where([
-                            ['email',  '=', $request->email],
-                            ['id', '<>', $id],
-                        ])->exists();
-
-        if ($check_email){
-            Alert::error('Gagal', 'Email sudah terdaftar');
-            return redirect('users');
-        }
-
-        $password = [];
-        if ($request->password) {
-            $password = ['password' => bcrypt($request->password)];
-        }
-
-        $data = [
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'email' => $request->email,
-            'role_id' => $request->role_id
-        ];
-        $data = array_merge($data, $password);
-
-        $user = User::updateOrCreate([
-            'id' => $id
-        ], $data);
-
-        if (!$user) {
-            Alert::error('Gagal', 'Profile gagal disimpan');
-            return redirect('home');
-        }
-
-        Alert::success('Berhasil', 'Profile berhasil disimpan');
-        return redirect('home');
-    }
-
     public function show()
     {
-        $data = [
-            'roles' => Roles::get(),
-            'users' => auth()->user(),
-        ];
-
-        return view('profile', $data);
+        return redirect('users');
     }
 }

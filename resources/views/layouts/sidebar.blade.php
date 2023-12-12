@@ -2,7 +2,7 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar" style="font-size:15px;">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/home">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/dashboard">
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-key"></i>
         </div>
@@ -12,8 +12,8 @@
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
 
-    <li class="nav-item {{ Request::segment(1) === 'home' ? 'active' : null }}">
-        <a class="nav-link" href="/home">
+    <li class="nav-item {{ Request::segment(1) === 'dashboard' ? 'active' : null }}">
+        <a class="nav-link" href="/dashboard">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
     </li>
@@ -27,7 +27,6 @@
 
     <!-- Nav Item - Tables -->
     @php
-        $access_controls = auth()->user()->getRoleAndPermission();
         $storages = isset($access_controls['Storages']) ? ($access_controls['Storages']['is_view'] ? true : false) : false;
         $users = isset($access_controls['User']) ? ($access_controls['User']['is_view'] ? true : false) : false;
         $roles = isset($access_controls['Roles']) ? ($access_controls['Roles']['is_view'] ? true : false) : false;
@@ -36,7 +35,7 @@
     @if ($storages)
         <li class="nav-item {{ Request::segment(1) === 'storages' ? 'active' : null }}">
             <a class="nav-link" href="/storages">
-                <i class="fas fa-fw fa-archive"></i>
+                <i class="fas fa-fw fa-cloud"></i>
                 <span>Storage</span></a>
         </li>
     @endif
@@ -44,8 +43,8 @@
         <li class="nav-item {{ in_array(Request::segment(1), ['users', 'roles']) ? 'active' : null }}">
             <a class="nav-link {{ in_array(Request::segment(1), ['users', 'roles']) ? null : 'collapsed' }}" href="#"
                 data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                <i class="fas fa-fw fa-cog"></i>
-                <span>Master</span>
+                <i class="fas fa-fw fa-wrench"></i>
+                <span>Settings</span>
             </a>
             <div id="collapseTwo" class="collapse {{ in_array(Request::segment(1), ['users', 'roles']) ? 'show' : null }}"
                 aria-labelledby="headingTwo" data-parent="#accordionSidebar" style="">
@@ -56,7 +55,7 @@
                     @endif
                     @if ($roles)
                         <a class="collapse-item {{ Request::segment(1) === 'roles' ? 'active' : null }}" href="/roles"><i
-                                class="fas fa-fw fa-user-tag"></i> Roles</a>
+                                class="fas fa-fw fa-tag"></i> Roles</a>
                     @endif
                 </div>
             </div>

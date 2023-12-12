@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AppHelper;
 use App\Storages;
 use App\User;
 
@@ -21,11 +22,12 @@ class HomeController extends Controller
         $total_user = User::count();
 
         $data = [
+            'access_controls' => AppHelper::getRoleAndPermission(),
             'data' => [
                 'files' => [
                     'total' => $total_file,
                     'label' => 'Total Files',
-                    'icon' => 'fas fa-archive'
+                    'icon' => 'fas fa-folder-open'
                 ],
                 'encrypted' => [
                     'total' => $total_encrypted,

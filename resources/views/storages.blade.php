@@ -30,7 +30,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover" width="100%" cellspacing="0" style="font-size: 15px;">
+                    <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0" style="font-size: 15px;">
                         <thead class="thead-dark">
                             <tr>
                                 <th>File Name</th>
@@ -38,7 +38,7 @@
                                 <th>Modified</th>
                                 <th>Owner</th>
                                 <th>Status</th>
-                                <th>Action</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>

@@ -3,23 +3,34 @@
 namespace App\Http\Controllers;
 
 use App\AccessControl;
+use App\AppHelper;
 use App\Roles;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class RolesController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware(function ($request, $next) {
+            $hasAccess = AppHelper::checkAuthorization(Auth::user()->role_id, 'Roles');
+            if (!$hasAccess) {
+                throw new AuthorizationException('Access Denied You don’t have permission to access');
+            }
+
+            return $next($request);
+        });
     }
 
     public function index()
     {
         $data = [
             'roles' => Roles::get(),
-            'access' => auth()->user()->getRoleAndPermission('Roles')['Roles']
+            'access_controls' => AppHelper::getRoleAndPermission(),
+            'access' => AppHelper::getRoleAndPermission('Roles', true)
         ];
 
         return view('roles', $data);
@@ -30,6 +41,7 @@ class RolesController extends Controller
         $model = new Roles();
         $data = [
             'roles' => $model,
+            'access_controls' => AppHelper::getRoleAndPermission(),
             'modules' => $model->getPermissions()
         ];
 

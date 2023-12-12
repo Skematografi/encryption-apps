@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <form action="{{ route('users.update-profile') }}" method="POST" autocomplete="off">
+                <form action="{{ route('profile.store') }}" method="POST" autocomplete="off">
                     @csrf
                     <div class="form-row">
                         <div class="col-md-6 mb-3">
