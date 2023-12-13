@@ -46,22 +46,25 @@
                                     <td class="{{ $item['id'] . 'name' }}">{{ $item['name'] }}</td>
                                     <td class="{{ $item['id'] . 'updated_at' }}">{{ date('d-m-Y H:i:s', strtotime($item['updated_at'])) }}</td>
                                     <td>
-                                        @if ($item['id'] != 1)
-                                            <div class="d-flex justify-content-center">
+                                        <div class="d-flex justify-content-center">
+                                            <a href="/roles/{{ $item['id'] }}" class="text-secondary mr-3" title="Klik untuk edit role">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                            @if ($item['id'] != 1)
                                                 @if ($access['is_edit'])
-                                                    <a href="/roles/{{ $item['id'] }}/edit" class="text-primary mr-3" title="Klik untuk edit user">
+                                                    <a href="/roles/{{ $item['id'] }}/edit" class="text-primary mr-3" title="Klik untuk edit role">
                                                         <i class="fa fa-edit"></i>
                                                     </a>
                                                 @endif
                                                 @if ($access['is_delete'])
                                                     {{ Form::open(['route' => ['roles.destroy', $item['id']], 'method' => 'delete']) }}
                                                     <a href="javascript:void(0);" onclick="$(this).closest('form').submit();"
-                                                        class="text-danger" title="Klik untuk hapus user"><i
+                                                        class="text-danger" title="Klik untuk hapus role"><i
                                                             class="fa fa-trash"></i></a>
                                                     {{ Form::close() }}
                                                 @endif
-                                            </div>
-                                        @endif
+                                            @endif
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

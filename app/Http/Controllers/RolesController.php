@@ -53,6 +53,21 @@ class RolesController extends Controller
         $model = Roles::firstWhere('id', $id);
         $data = [
             'roles' => $model,
+            'access_controls' => AppHelper::getRoleAndPermission(),
+            'read_only' => 0,
+            'modules' => $model->getPermissions()
+        ];
+
+        return view('permissions', $data);
+    }
+
+    public function show($id)
+    {
+        $model = Roles::firstWhere('id', $id);
+        $data = [
+            'roles' => $model,
+            'access_controls' => AppHelper::getRoleAndPermission(),
+            'read_only' => 1,
             'modules' => $model->getPermissions()
         ];
 

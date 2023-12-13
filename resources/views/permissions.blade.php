@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <form action="{{ route('roles.store') }}" method="POST" autocomplete="off">
+                <form action="{{ route('roles.store') }}" id="formPermission" method="POST" autocomplete="off">
                     @csrf
                     <div class="form-row">
                         <div class="col-md-6">
@@ -96,8 +96,12 @@
                     </table>
 
                     <div class="text-right">
-                        <a href="/roles" class="btn btn-secondary mr-3">Batal</a>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        @if($read_only)
+                            <a href="/roles" class="btn btn-secondary">Kembali</a>
+                        @else
+                            <a href="/roles" class="btn btn-secondary mr-3">Batal</a>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        @endif
                     </div>
                 </form>
             </div>
@@ -108,6 +112,8 @@
 
     @push('script')
         <script>
+            let isView = "<?= $read_only ?>";
+
             $('.checkbox-view').change(function() {
                 let id = $(this).attr('data-id');
                 if (!this.checked) {
@@ -121,6 +127,10 @@
                     $('.checkbox-view' + id).prop('checked', true);
                 }
             });
+
+            if (isView == '1') {
+                $("#formPermission :input").prop("disabled", true);
+            }
         </script>
     @endpush
 @endsection
