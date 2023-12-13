@@ -41,6 +41,8 @@ class RolesController extends Controller
         $model = new Roles();
         $data = [
             'roles' => $model,
+            'read_only' => 0,
+            'heading' => "Tambah Role",
             'access_controls' => AppHelper::getRoleAndPermission(),
             'modules' => $model->getPermissions()
         ];
@@ -55,6 +57,7 @@ class RolesController extends Controller
             'roles' => $model,
             'access_controls' => AppHelper::getRoleAndPermission(),
             'read_only' => 0,
+            'heading' => "Edit Role",
             'modules' => $model->getPermissions()
         ];
 
@@ -68,6 +71,7 @@ class RolesController extends Controller
             'roles' => $model,
             'access_controls' => AppHelper::getRoleAndPermission(),
             'read_only' => 1,
+            'heading' => "View Role",
             'modules' => $model->getPermissions()
         ];
 

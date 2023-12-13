@@ -52,12 +52,14 @@
                                     <td class="{{ $item['id'] . 'role-name' }}">{{ $item->role->name }}</td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <input type="hidden" class="form-control {{ $item['id'] . 'role-id' }}" name="{{ $item['id'] . 'role-id' }}"
-                                                    value="{{ $item->role->id }}">
+                                            <input type="hidden" class="form-control {{ $item['id'] . 'role-id' }}" name="{{ $item['id'] . 'role-id' }}" value="{{ $item->role->id }}">
+                                            <a href="javascript:void(0);" onclick="edit(this)" data-id="{{ $item['id'] }}" data-action="view" class="text-secondary mr-3" title="Klik untuk view user">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
                                             @if ($access['is_edit'])
-                                                <a href="javascript:void(0);" onclick="edit(this)" data-id="{{ $item['id'] }}"
-                                                    class="text-primary mr-3" title="Klik untuk edit user"><i
-                                                        class="fa fa-edit"></i></a>
+                                                <a href="javascript:void(0);" onclick="edit(this)" data-id="{{ $item['id'] }}" data-action="edit" class="text-primary mr-3" title="Klik untuk edit user">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
                                             @endif
                                             @if ($access['is_delete'] && auth()->user()->id != $item['id'])
                                                 {{ Form::open(['route' => ['users.destroy', $item['id']], 'method' => 'delete']) }}
@@ -142,8 +144,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="button" class="btn btn-secondary btn-close" data-dismiss="modal">Tutup</button>
+                        <button type="button" class="btn btn-secondary btn-cancel" data-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary btn-save">Simpan</button>
                     </div>
                 </form>
             </div>
@@ -157,17 +160,19 @@
                 $('#username').attr('readonly', false);
                 $('#password').attr('required', true);
                 $('.field-user').val('');
+                $('#modelUser :input').prop('disabled', false);
+                $('.btn-close').attr('hidden', true);
+                $('.btn-cancel, .btn-save').removeAttr('hidden');
             }
 
             function edit(ele) {
                 let id = $(ele).attr('data-id');
+                let action = $(ele).attr('data-action');
                 let username = $('.' + id + 'username').html();
                 let name = $('.' + id + 'name').html();
                 let phone = $('.' + id + 'phone').html();
                 let email = $('.' + id + 'email').html();
                 let roleId = $('.' + id + 'role-id').val();
-
-                $('#modalTitle').html('Edit User');
 
                 $('#user_id').val(id);
                 $('#username').val(username).attr('readonly', true);
@@ -177,9 +182,19 @@
                 $('#email').val(email);
                 $('#role_id').val(roleId);
 
+                if (action == 'view') {
+                    $('#modalTitle').html('View User');
+                    $('#modelUser :input').prop('disabled', true);
+                    $('.btn-close').removeAttr('hidden').prop('disabled', false);
+                    $('.btn-cancel, .btn-save').attr('hidden', true);
+                } else {
+                    $('#modalTitle').html('Edit User');
+                    $('#modelUser :input').prop('disabled', false);
+                    $('.btn-close').attr('hidden', true);
+                    $('.btn-cancel, .btn-save').removeAttr('hidden');
+                }
+
                 $('#modelUser').modal('show');
-
-
             }
         </script>
     @endpush

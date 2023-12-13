@@ -18,7 +18,7 @@
             <div class="card-header py-3">
                 <div class="row">
                     <div class="col-6">
-                        <h4 class="m-0 font-weight-bold text-primary">Tambah Role</h4>
+                        <h4 class="m-0 font-weight-bold text-primary">{{ $heading }}</h4>
                     </div>
                 </div>
             </div>
