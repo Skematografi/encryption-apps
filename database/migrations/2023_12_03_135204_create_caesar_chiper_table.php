@@ -17,7 +17,6 @@ class CreateCaesarChiperTable extends Migration
             $table->string('key', 1);
             $table->string('value', 3);
             $table->index('key');
-            $table->unique(['key', 'value']);
             $table->primary(['key', 'value']);
         });
     }

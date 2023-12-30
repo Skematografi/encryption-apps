@@ -26,7 +26,10 @@ class StoragesController extends Controller
             return $next($request);
         });
 
-        AppHelper::deleteDir(public_path("storage/uploads/tmp"));
+        $path = public_path("storage/uploads/tmp");
+        if (is_dir($path)) {
+            AppHelper::deleteDir($path);
+        }
     }
 
     public function index()
@@ -66,6 +69,10 @@ class StoragesController extends Controller
                 $imageName = str_replace('.' . $extension, '', $originalName);
                 $unique_filename = $imageName . '_' . time() . '.' . $extension;
                 $path = "storage/uploads/";
+                $checkPath = public_path($path);
+                if (!is_dir($checkPath)) {
+                    mkdir($checkPath);
+                }
                 move_uploaded_file($_FILES['file']['tmp_name'][$i], public_path($path . $unique_filename));
 
                 if (Storages::firstWhere('filename', $imageName)) {
@@ -122,7 +129,7 @@ class StoragesController extends Controller
         copy($source, $newFile);
 
         $decrypted = function ($file, $key, $iv) {
-            $cipher = 'aes-256-cbc-hmac-sha256';
+            $cipher = 'aes-256-cbc';
             return openssl_decrypt($file, $cipher, $key, OPENSSL_RAW_DATA, $iv);
         };
 
@@ -141,7 +148,7 @@ class StoragesController extends Controller
         $source = public_path($storages->path);
 
         $encrypted = function ($file, $key, $iv) {
-            $cipher = 'aes-256-cbc-hmac-sha256';
+            $cipher = 'aes-256-cbc';
             return openssl_encrypt($file, $cipher, $key, OPENSSL_RAW_DATA, $iv);
         };
 
@@ -163,7 +170,7 @@ class StoragesController extends Controller
         $source = public_path($storages->path);
 
         $decrypted = function ($file, $key, $iv) {
-            $cipher = 'aes-256-cbc-hmac-sha256';
+            $cipher = 'aes-256-cbc';
             return openssl_decrypt($file, $cipher, $key, OPENSSL_RAW_DATA, $iv);
         };
 
