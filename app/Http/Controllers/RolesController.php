@@ -111,7 +111,7 @@ class RolesController extends Controller
 
     public function destroy(Roles $role)
     {
-        $role->destroy($role->id);
+        $role->forceDelete($role->id);
         Alert::success('Berhasil', 'Data role berhasil dihapus');
         return redirect('roles');
     }

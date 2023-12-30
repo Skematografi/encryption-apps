@@ -103,7 +103,7 @@ class UsersController extends Controller
 
     public function destroy(User $user)
     {
-        $user->destroy($user->id);
+        $user->forceDelete($user->id);
         Alert::success('Berhasil', 'Data user berhasil dihapus');
         return redirect('users');
     }

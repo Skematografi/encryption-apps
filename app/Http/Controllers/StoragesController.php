@@ -109,7 +109,7 @@ class StoragesController extends Controller
             unlink(public_path($storages->path));
         }
 
-        $storages->delete();
+        $storages->forceDelete();
 
         Alert::success('Berhasil', 'File berhasil dihapus');
         return redirect('storages');
